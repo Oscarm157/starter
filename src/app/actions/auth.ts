@@ -51,7 +51,7 @@ export async function login(formData: FormData): Promise<{ error: string } | voi
   if (!ok) return { error: "Correo o contraseña incorrectos." };
 
   await setSessionCookie(user.id);
-  redirect(user.mustChangePassword ? "/change-password" : "/");
+  redirect(user.mustChangePassword ? "/change-password" : "/admin");
 }
 
 export async function logout(): Promise<void> {
@@ -88,5 +88,5 @@ export async function changePassword(
     .set({ passwordHash, mustChangePassword: false })
     .where(eq(users.id, me.id));
 
-  redirect("/");
+  redirect("/admin");
 }

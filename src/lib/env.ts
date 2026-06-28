@@ -8,6 +8,9 @@ const schema = z.object({
   BLOB_READ_WRITE_TOKEN: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().email().optional().or(z.literal("")),
+  // CRM: destinatario de aviso de lead nuevo (opcional) e IA opcional para blog/resumen.
+  LEAD_RECIPIENT: z.string().email().optional().or(z.literal("")),
+  ANTHROPIC_API_KEY: z.string().optional(),
 });
 
 let cached: z.infer<typeof schema> | undefined;

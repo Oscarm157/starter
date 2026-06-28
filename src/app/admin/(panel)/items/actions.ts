@@ -22,7 +22,7 @@ export async function createItem(
   if (!parsed.ok) return { error: parsed.error };
 
   await db.insert(items).values({ ownerId: me.id, title: parsed.data.title });
-  revalidatePath("/items");
+  revalidatePath("/admin/items");
 }
 
 const idSchema = z.string().uuid();
@@ -37,5 +37,5 @@ export async function deleteItem(id: string): Promise<void> {
   await db
     .delete(items)
     .where(and(eq(items.id, parsed.data), eq(items.ownerId, me.id)));
-  revalidatePath("/items");
+  revalidatePath("/admin/items");
 }
