@@ -40,6 +40,29 @@ Vercel Blob · Resend · Sentry · Vercel BotID · Playwright.
 | `npm run db:seed` | Crea el usuario admin inicial (idempotente) |
 | `npm run test:e2e` | Smoke de Playwright (captura el login) |
 
+## CRM (módulo en `/admin`)
+El panel administrativo vive en `/admin` (sitio público del cliente en `/`). Trae:
+- **Leads**: lista con filtros y paginación, pipeline kanban (6 estados), detalle con comentarios,
+  bitácora de eventos (audit), archivos adjuntos y asignación. Captura pública por `POST /api/leads`
+  (rate-limit, dedupe, aviso por correo, webhook opcional).
+- **Usuarios** multi-rol (`admin` / `agent` / `viewer`): alta, edición, reset de contraseña, activar/desactivar.
+  El `agent` solo ve sus leads asignados; `viewer` es solo lectura.
+- **Dashboard** de métricas (funnel, conversión, por fuente, por agente, tendencia).
+- **Blog** bilingüe (es/en) opcional con draft por IA.
+
+Tema del panel: dark + acento mint, todo bajo `.crm-root` (no se filtra al sitio público). Re-márcalo
+cambiando una sola variable, `--crm-accent`, en `globals.css`.
+
+**IA (opcional, detrás de `ANTHROPIC_API_KEY`):** draft de blog desde texto pegado y resumen de leads
+de bot. Sin la key, ambos se omiten sin romper nada. Personaliza la voz del blog en `src/lib/blog/voice.ts`
+(no la dejes genérica en producción).
+
+**Para el tier "Landing" (sin CRM):** borra `src/app/admin`, `src/app/api/leads`, `src/proxy.ts`, las
+tablas CRM de `src/lib/schema.ts` (`leads*`, `articles`) y las libs `crm-*` / `blog`. El resto sigue en pie.
+
+**Capa de dominio (capa 3, bespoke por cliente):** la tabla `items` y `/admin/items` son la plantilla del
+patrón CRUD. Duplícala/renómbrala para tu entidad real (propiedades, productos…) o bórrala.
+
 ## Qué incluye
 - **Auth**: sesión por cookie firmada (PBKDF2 + HMAC), `requireUser`/`requireRole`, login / logout /
   cambio de contraseña. `src/lib/auth.ts`, `src/lib/session.ts`.
@@ -48,7 +71,7 @@ Vercel Blob · Resend · Sentry · Vercel BotID · Playwright.
   (`src/lib/validate.ts`), guards en cada action/route, BotID en endpoints caros
   (`src/app/api/expensive`). Env validado en `src/lib/env.ts`.
 - **Estados por default**: `Loading` / `Empty` / `ErrorState` (`src/components/states.tsx`) y la
-  página `/items` que los demuestra (loading.tsx, error.tsx, empty).
+  página `/admin/items` que los demuestra (loading.tsx, error.tsx, empty).
 - **Infra**: Sentry guardado por DSN, CI en GitHub Actions (tsc + lint + build), Playwright smoke.
 - **Extras**: `lib/blob.ts` (subida de imágenes), `lib/email.ts` (Resend).
 

@@ -12,7 +12,7 @@ import { LoginForm } from "./login-form";
 
 export default async function LoginPage() {
   const me = await getCurrentUser();
-  if (me) redirect("/");
+  if (me) redirect("/admin");
 
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-12">
