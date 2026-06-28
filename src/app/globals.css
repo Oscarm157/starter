@@ -100,6 +100,29 @@
    por una sola variable (--crm-accent). Todo bajo .crm-root
    para no filtrar estilos al sitio público. Portado del CRM de BG.
    ============================================================ */
+/* ===== Modo claro del CRM (switch del cliente): redefine solo las --crm-* crudas.
+   Se activa con data-crm-theme="light" en <html>; aplica al shell y a los modales
+   (ambos son .crm-root). Mayor especificidad que .crm-root, así que gana. ===== */
+html[data-crm-theme="light"] .crm-root {
+  --crm-bg: #f4f6fa;
+  --crm-surface: #ffffff;
+  --crm-surface-2: #ffffff;
+  --crm-surface-3: #eef1f7;
+  --crm-ink: #0f1521;
+  --crm-ink-soft: #3c4453;
+  --crm-ink-mute: #616b7b;
+  --crm-ink-faint: #98a1b0;
+  --crm-line: #e4e8f0;
+  --crm-line-strong: #ccd4e0;
+  --crm-accent: #00b884;
+  --crm-accent-soft: #00a276;
+  --crm-accent-strong: #0b7d5a;
+  --crm-accent-tint: rgba(0, 184, 132, 0.1);
+  --crm-accent-tint-2: rgba(0, 184, 132, 0.16);
+  --crm-accent-ring: rgba(0, 184, 132, 0.3);
+  --crm-shadow-pop: 0 16px 48px -12px rgba(15, 21, 33, 0.16), 0 0 0 1px var(--crm-line);
+}
+
 .crm-root {
   /* ===== Scaffold neutro casi-negro frío (familia Linear/Rox) =====
      Elevación por capa de color + hairline, NO por sombra. Re-marcable:

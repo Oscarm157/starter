@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Users, KanbanSquare, ListFilter, UserRound, LayoutDashboard, Newspaper, LogOut,
+  Users, KanbanSquare, ListFilter, UserRound, LayoutDashboard, Newspaper, LogOut, Sun, Moon,
 } from "lucide-react";
 import {
   Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarGroup,
@@ -34,6 +35,23 @@ export function AppSidebar({
   const pathname = usePathname();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+
+  const [light, setLight] = useState(false);
+  useEffect(() => {
+    // Sincroniza el icono con el atributo que el script anti-flash ya aplicó en <html>.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLight(document.documentElement.getAttribute("data-crm-theme") === "light");
+  }, []);
+  function toggleTheme() {
+    const next = !light;
+    setLight(next);
+    const el = document.documentElement;
+    if (next) el.setAttribute("data-crm-theme", "light");
+    else el.removeAttribute("data-crm-theme");
+    try {
+      localStorage.setItem("crm-theme", next ? "light" : "dark");
+    } catch {}
+  }
 
   const comercial: Item[] = [];
   if (showDashboard) comercial.push({ href: "/admin/dashboard", label: "Resumen", icon: LayoutDashboard });
@@ -96,6 +114,12 @@ export function AppSidebar({
           </div>
         )}
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={toggleTheme} tooltip={light ? "Tema oscuro" : "Tema claro"}>
+              {light ? <Moon strokeWidth={1.9} /> : <Sun strokeWidth={1.9} />}
+              <span>{light ? "Tema oscuro" : "Tema claro"}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <form action={logoutAction} className="w-full">
               <SidebarMenuButton asChild tooltip="Salir">
